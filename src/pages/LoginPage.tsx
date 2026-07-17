@@ -23,12 +23,33 @@ export default function LoginPage() {
 
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedRole) {
+      alert('Please select a role first');
+      return;
+    }
     if (phone.length >= 10) setOtpSent(true);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/dashboard');
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, role: selectedRole }),
+      });
+      if (res.ok) {
+        const user = await res.json();
+        localStorage.setItem('maatritrack-user', JSON.stringify(user));
+        navigate('/dashboard');
+      } else {
+        const errData = await res.json();
+        alert(errData.error || 'Login failed');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to connect to the login API');
+    }
   };
 
   return (

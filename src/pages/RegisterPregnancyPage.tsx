@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -6,10 +6,37 @@ import { Save, AlertTriangle } from 'lucide-react';
 
 export default function RegisterPregnancyPage() {
   const { t } = useLanguage();
+  const userStr = localStorage.getItem('maatritrack-user');
+  const user = userStr ? JSON.parse(userStr) : null;
+
   const [form, setForm] = useState({
-    name: '', age: '', phone: '', village: '', lmp: '',
+    name: '', age: '', phone: user?.phone || '', village: '', lmp: '',
     gravida: '1', para: '0', prevCSection: false, multipleGestation: false,
   });
+
+  useEffect(() => {
+    const activePhone = user?.phone;
+    if (!activePhone) return;
+
+    fetch(`/api/registration?phone=${encodeURIComponent(activePhone)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.name !== undefined) {
+          setForm({
+            name: data.name || '',
+            age: data.age || '',
+            phone: data.phone || activePhone || '',
+            village: data.village || '',
+            lmp: data.lmp || '',
+            gravida: data.gravida || '1',
+            para: data.para || '0',
+            prevCSection: !!data.prevCSection,
+            multipleGestation: !!data.multipleGestation,
+          });
+        }
+      })
+      .catch(err => console.error('Error fetching registration:', err));
+  }, []);
 
   const calculateEDD = (lmp: string) => {
     if (!lmp) return '';
@@ -38,9 +65,24 @@ export default function RegisterPregnancyPage() {
   const weeks = calculateGestationalAge(form.lmp);
   const riskFlags = getRiskFlags();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(t('success'));
+    try {
+      const activePhone = user?.phone || form.phone || '+919876543210';
+      const res = await fetch('/api/registration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, phone: activePhone }),
+      });
+      if (res.ok) {
+        alert(t('success'));
+      } else {
+        alert('Failed to save registration details');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error while saving registration');
+    }
   };
 
   return (

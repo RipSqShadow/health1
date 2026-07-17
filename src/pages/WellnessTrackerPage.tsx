@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -13,24 +13,14 @@ const trackingCategories = [
   { key: 'trackSleep', icon: Moon, color: 'from-indigo-400 to-indigo-500', log: 'logSleep', unit: 'hours' },
   { key: 'trackMood', icon: Smile, color: 'from-yellow-400 to-yellow-500', log: 'logMood', unit: 'mood' },
   { key: 'trackExercise', icon: Dumbbell, color: 'from-green-400 to-green-500', log: 'logExercise', unit: 'minutes' },
-  { key: 'trackSupplements', icon: Pill, color: 'from-purple-400 to-purple-500', log: 'logSupplement', unit: 'supplement' },
-  { key: 'trackMedication', icon: Pill, color: 'from-red-400 to-red-500', log: 'logMedication', unit: 'medication' },
-  { key: 'trackWeight', icon: Scale, color: 'from-teal-400 to-teal-500', log: 'logWeight', unit: 'weight' },
-  { key: 'trackSymptoms', icon: Thermometer, color: 'from-coral-400 to-coral-500', log: 'logSymptom', unit: 'symptom' },
-  { key: 'trackAppointments', icon: Calendar, color: 'from-maatri-400 to-maatri-500', log: 'appointment', unit: 'appointment' },
-  { key: 'trackLabs', icon: FlaskConical, color: 'from-cyan-400 to-cyan-500', log: 'labResult', unit: 'labResult' },
-  { key: 'trackMentalHealth', icon: Brain, color: 'from-pink-400 to-pink-500', log: 'stress', unit: 'stress' },
-  { key: 'trackEnergy', icon: Zap, color: 'from-amber-400 to-amber-500', log: 'energy', unit: 'energy' },
-];
-
-const dailyProgress = [
-  { label: 'trackWater', current: 6, target: 8, unit: 'glasses' },
-  { label: 'trackNutrition', current: 1800, target: 2200, unit: 'calories' },
-  { label: 'trackSleep', current: 7, target: 8, unit: 'hours' },
+  { key: 'trackSupplement', icon: Pill, color: 'from-pink-400 to-pink-500', log: 'logSupplement', unit: 'tablets' },
+  { key: 'trackWeight', icon: Scale, color: 'from-teal-400 to-teal-500', log: 'logWeight', unit: 'kg' },
+  { key: 'trackSymptom', icon: Thermometer, color: 'from-red-400 to-red-500', log: 'logSymptom', unit: 'severity' }
 ];
 
 const dangerSignsList = [
-  "Severe headache or blurred vision",
+  "Severe headache or blurry vision",
+  "Swelling of hands and face",
   "Severe abdominal pain",
   "Vaginal bleeding",
   "Reduced fetal movement",
@@ -47,12 +37,53 @@ const mealPlan = [
 
 export default function WellnessTrackerPage() {
   const { t } = useLanguage();
+  const userStr = localStorage.getItem('maatritrack-user');
+  const user = userStr ? JSON.parse(userStr) : null;
+
   const [activeLog, setActiveLog] = useState<string | null>(null);
   const [checkedSigns, setCheckedSigns] = useState<string[]>([]);
   const [ifaTaken, setIfaTaken] = useState(false);
 
+  useEffect(() => {
+    const activePhone = user?.phone;
+    if (!activePhone) return;
+
+    fetch(`/api/wellness?phone=${encodeURIComponent(activePhone)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          if (data.checkedSigns) setCheckedSigns(data.checkedSigns);
+          if (data.ifaTaken !== undefined) setIfaTaken(data.ifaTaken);
+        }
+      })
+      .catch(err => console.error('Error fetching wellness logs:', err));
+  }, []);
+
+  const saveWellnessData = async (newSigns: string[], newIfa: boolean) => {
+    try {
+      const activePhone = user?.phone || '+919876543210';
+      await fetch('/api/wellness', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: activePhone, checkedSigns: newSigns, ifaTaken: newIfa }),
+      });
+    } catch (err) {
+      console.error('Error saving wellness data:', err);
+    }
+  };
+
   const toggleSign = (sign: string) => {
-    setCheckedSigns(prev => prev.includes(sign) ? prev.filter(s => s !== sign) : [...prev, sign]);
+    const nextSigns = checkedSigns.includes(sign)
+      ? checkedSigns.filter(s => s !== sign)
+      : [...checkedSigns, sign];
+    setCheckedSigns(nextSigns);
+    saveWellnessData(nextSigns, ifaTaken);
+  };
+
+  const handleIfaToggle = () => {
+    const nextIfa = !ifaTaken;
+    setIfaTaken(nextIfa);
+    saveWellnessData(checkedSigns, nextIfa);
   };
 
   return (
@@ -101,7 +132,7 @@ export default function WellnessTrackerPage() {
               <div className="border-t border-gray-100 pt-4">
                 <p className="text-sm font-medium text-gray-700 mb-3">Daily IFA (Iron Folic Acid) Pill</p>
                 <button 
-                  onClick={() => setIfaTaken(!ifaTaken)}
+                  onClick={handleIfaToggle}
                   className={`w-full py-3 rounded-xl flex items-center justify-center gap-2 font-semibold transition-all ${ifaTaken ? 'bg-sage-100 text-sage-600 border border-sage-200' : 'bg-white border-2 border-dashed border-gray-300 text-gray-500 hover:border-maatri-300 hover:text-maatri-600'}`}
                 >
                   {ifaTaken ? <CheckCircle2 className="w-5 h-5" /> : <Pill className="w-5 h-5" />}

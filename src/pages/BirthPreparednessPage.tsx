@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -6,6 +6,9 @@ import { ClipboardList, Hospital, Bus, Users, Droplet, Save } from 'lucide-react
 
 export default function BirthPreparednessPage() {
   const { t } = useLanguage();
+  const userStr = localStorage.getItem('maatritrack-user');
+  const user = userStr ? JSON.parse(userStr) : null;
+
   const [formData, setFormData] = useState({
     hospital: '',
     transport: '',
@@ -19,6 +22,31 @@ export default function BirthPreparednessPage() {
     bagPacked: false
   });
 
+  useEffect(() => {
+    const activePhone = user?.phone;
+    if (!activePhone) return;
+
+    fetch(`/api/birth-preparedness?phone=${encodeURIComponent(activePhone)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.hospital !== undefined) {
+          setFormData({
+            hospital: data.hospital || '',
+            transport: data.transport || '',
+            bloodDonor1: data.bloodDonor1 || '',
+            bloodDonor1Phone: data.bloodDonor1Phone || '',
+            bloodDonor2: data.bloodDonor2 || '',
+            bloodDonor2Phone: data.bloodDonor2Phone || '',
+            companion: data.companion || '',
+            companionPhone: data.companionPhone || '',
+            fundsSaved: !!data.fundsSaved,
+            bagPacked: !!data.bagPacked
+          });
+        }
+      })
+      .catch(err => console.error('Error fetching birth preparedness:', err));
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
     setFormData(prev => ({
@@ -27,8 +55,23 @@ export default function BirthPreparednessPage() {
     }));
   };
 
-  const handleSave = () => {
-    alert('Birth Preparedness Plan Saved!');
+  const handleSave = async () => {
+    try {
+      const activePhone = user?.phone || '+919876543210';
+      const res = await fetch('/api/birth-preparedness', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, phone: activePhone }),
+      });
+      if (res.ok) {
+        alert('Birth Preparedness Plan Saved!');
+      } else {
+        alert('Failed to save birth preparedness plan');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error while saving birth plan');
+    }
   };
 
   return (
