@@ -16,7 +16,7 @@
 
   body {
 
-    @apply bg-cream-50 text-gray-800 font-sans antialiased;
+    @apply bg-[#fdfbf7] text-gray-800 font-sans antialiased;
 
     background-image:
 
