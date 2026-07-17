@@ -96,7 +96,7 @@ export default function Footer() {
               <h4 className="font-semibold text-lg mb-4">Services</h4>
               <ul className="space-y-2 text-maatri-200">
                 <li>
-                  <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="flex items-center gap-2 group hover:text-white transition-colors">
+                  <a href="https://wa.me/916358810105" target="_blank" rel="noreferrer" className="flex items-center gap-2 group hover:text-white transition-colors">
                     <MessageCircle className="w-4 h-4 text-sage-400 group-hover:animate-pulse" /> WhatsApp Chatbot
                   </a>
                 </li>
