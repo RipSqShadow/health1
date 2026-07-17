@@ -1,0 +1,224 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+
+
+@layer base {
+
+  html {
+
+    scroll-behavior: smooth;
+
+  }
+
+  body {
+
+    @apply bg-cream-50 text-gray-800 font-sans antialiased;
+
+    background-image:
+
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.08), transparent),
+
+      radial-gradient(ellipse 60% 40% at 100% 50%, rgba(244, 63, 94, 0.04), transparent);
+
+  }
+
+  ::selection {
+
+    @apply bg-maatri-200 text-maatri-900;
+
+  }
+
+}
+
+
+
+@layer components {
+
+  .btn-primary {
+
+    @apply relative overflow-hidden bg-gradient-to-r from-maatri-600 to-maatri-500 hover:from-maatri-700 hover:to-maatri-600 text-white font-semibold py-3 px-6 rounded-2xl transition-all duration-300 shadow-maatri hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0;
+
+  }
+
+  .btn-primary::after {
+
+    content: '';
+
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full;
+
+    animation: shimmer 3s infinite;
+
+  }
+
+  .btn-secondary {
+
+    @apply bg-white/80 hover:bg-white text-maatri-700 font-semibold py-3 px-6 rounded-2xl border border-maatri-200/80 backdrop-blur-sm transition-all duration-300 hover:border-maatri-300 hover:shadow-glass hover:-translate-y-0.5;
+
+  }
+
+  .btn-emergency {
+
+    @apply bg-gradient-to-r from-coral-500 to-coral-600 hover:from-coral-600 hover:to-coral-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-coral animate-pulse-glow hover:-translate-y-0.5;
+
+  }
+
+  .card {
+
+    @apply bg-white/70 backdrop-blur-xl rounded-3xl shadow-card p-6 border border-white/60 shadow-inner-glow;
+
+  }
+
+  .card-hover {
+
+    @apply card hover:shadow-maatri hover:-translate-y-1.5 hover:bg-white/85 transition-all duration-300 cursor-pointer;
+
+  }
+
+  .glass {
+
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-glass;
+
+  }
+
+  .glass-dark {
+
+    @apply bg-maatri-900/80 backdrop-blur-xl border border-white/10;
+
+  }
+
+  .gradient-text {
+
+    @apply bg-gradient-to-r from-maatri-600 via-maatri-500 to-sage-500 bg-clip-text text-transparent;
+
+  }
+
+  .gradient-text-warm {
+
+    @apply bg-gradient-to-r from-coral-500 via-coral-400 to-gold-400 bg-clip-text text-transparent;
+
+  }
+
+  .section-title {
+
+    @apply text-3xl md:text-4xl font-display font-bold text-maatri-900 tracking-tight;
+
+  }
+
+  .section-badge {
+
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-maatri-100/80 text-maatri-700 text-sm font-semibold backdrop-blur-sm border border-maatri-200/50;
+
+  }
+
+  .input-field {
+
+    @apply w-full px-4 py-3 rounded-xl bg-white/80 border border-maatri-200/80 focus:border-maatri-500 focus:ring-2 focus:ring-maatri-200/50 outline-none transition-all backdrop-blur-sm;
+
+  }
+
+  .badge-green {
+
+    @apply px-3 py-1 rounded-full text-xs font-semibold bg-sage-100 text-sage-600;
+
+  }
+
+  .badge-yellow {
+
+    @apply px-3 py-1 rounded-full text-xs font-semibold bg-gold-400/20 text-gold-500;
+
+  }
+
+  .badge-red {
+
+    @apply px-3 py-1 rounded-full text-xs font-semibold bg-coral-400/20 text-coral-600;
+
+  }
+
+  .hero-glow {
+
+    @apply relative;
+
+  }
+
+  .hero-glow::before {
+
+    content: '';
+
+    @apply absolute -inset-4 bg-gradient-to-r from-maatri-400/20 via-coral-400/10 to-sage-400/20 rounded-full blur-3xl -z-10;
+
+  }
+
+  .mesh-gradient {
+
+    background:
+
+      radial-gradient(at 40% 20%, rgba(20, 184, 166, 0.12) 0px, transparent 50%),
+
+      radial-gradient(at 80% 0%, rgba(244, 63, 94, 0.08) 0px, transparent 50%),
+
+      radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+
+      radial-gradient(at 80% 80%, rgba(251, 191, 36, 0.06) 0px, transparent 50%),
+
+      radial-gradient(at 0% 100%, rgba(20, 184, 166, 0.06) 0px, transparent 50%);
+
+  }
+
+  .particle-field {
+
+    background-image: radial-gradient(circle, rgba(20, 184, 166, 0.15) 1px, transparent 1px);
+
+    background-size: 48px 48px;
+
+    animation: float 20s linear infinite;
+
+  }
+
+  .wave-divider {
+
+    @apply w-full h-16 bg-gradient-to-b from-transparent to-white;
+
+  }
+
+  .stat-card {
+
+    @apply card relative overflow-hidden group;
+
+  }
+
+  .stat-card::before {
+
+    content: '';
+
+    @apply absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-maatri-400/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-500;
+
+  }
+
+}
+
+
+
+/* Language-specific font classes */
+
+.lang-hi, .lang-mr, .lang-ne, .lang-sa, .lang-bo, .lang-doi, .lang-mai { font-family: 'Noto Sans Devanagari', sans-serif; }
+
+.lang-bn, .lang-as { font-family: 'Noto Sans Bengali', sans-serif; }
+
+.lang-ta { font-family: 'Noto Sans Tamil', sans-serif; }
+
+.lang-te { font-family: 'Noto Sans Telugu', sans-serif; }
+
+.lang-kn { font-family: 'Noto Sans Kannada', sans-serif; }
+
+.lang-ml { font-family: 'Noto Sans Malayalam', sans-serif; }
+
+.lang-gu { font-family: 'Noto Sans Gujarati', sans-serif; }
+
+.lang-pa { font-family: 'Noto Sans Gurmukhi', sans-serif; }
+
+.lang-or { font-family: 'Noto Sans Oriya', sans-serif; }
+
