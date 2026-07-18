@@ -60,17 +60,29 @@ export default function WellnessTrackerPage() {
     if (!activePhone) return;
 
     fetch(`/api/wellness?phone=${encodeURIComponent(activePhone)}`)
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : Promise.reject('API error'))
       .then(data => {
         if (data) {
           if (data.checkedSigns) setCheckedSigns(data.checkedSigns);
           if (data.ifaTaken !== undefined) setIfaTaken(data.ifaTaken);
         }
       })
-      .catch(err => console.error('Error fetching wellness logs:', err));
+      .catch(() => {
+        const saved = localStorage.getItem('maatritrack-wellness');
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            if (data.checkedSigns) setCheckedSigns(data.checkedSigns);
+            if (data.ifaTaken !== undefined) setIfaTaken(data.ifaTaken);
+          } catch (e) { /* ignore */ }
+        }
+      });
   }, []);
 
   const saveWellnessData = async (newSigns: string[], newIfa: boolean) => {
+    // Always save to localStorage as backup
+    localStorage.setItem('maatritrack-wellness', JSON.stringify({ checkedSigns: newSigns, ifaTaken: newIfa }));
+
     try {
       const activePhone = user?.phone || '+919876543210';
       await fetch('/api/wellness', {
@@ -79,7 +91,7 @@ export default function WellnessTrackerPage() {
         body: JSON.stringify({ phone: activePhone, checkedSigns: newSigns, ifaTaken: newIfa }),
       });
     } catch (err) {
-      console.error('Error saving wellness data:', err);
+      console.warn('API unavailable, saved locally:', err);
     }
   };
 

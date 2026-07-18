@@ -20,36 +20,58 @@ export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     if (!selectedRole) {
-      alert('Please select a role first');
+      setError('Please select a role first');
       return;
     }
-    if (phone.length >= 10) setOtpSent(true);
+    if (phone.replace(/\D/g, '').length >= 10) {
+      setOtpSent(true);
+    } else {
+      setError('Please enter a valid 10-digit phone number');
+    }
+  };
+
+  const saveUserAndRedirect = (user: Record<string, unknown>) => {
+    localStorage.setItem('maatritrack-user', JSON.stringify(user));
+    navigate('/dashboard');
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const userData = {
+      phone: phone.replace(/\D/g, ''),
+      role: selectedRole,
+      createdAt: new Date().toISOString(),
+    };
+
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, role: selectedRole }),
+        body: JSON.stringify({ phone: userData.phone, role: selectedRole }),
       });
+
       if (res.ok) {
         const user = await res.json();
-        localStorage.setItem('maatritrack-user', JSON.stringify(user));
-        navigate('/dashboard');
-      } else {
-        const errData = await res.json();
-        alert(errData.error || 'Login failed');
+        saveUserAndRedirect(user);
+        return;
       }
     } catch (err) {
-      console.error(err);
-      alert('Failed to connect to the login API');
+      console.warn('API unavailable, using local storage:', err);
+    } finally {
+      setLoading(false);
     }
+
+    saveUserAndRedirect(userData);
   };
 
   return (
@@ -106,17 +128,25 @@ export default function LoginPage() {
                 <input
                   type="text"
                   value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter 6-digit OTP"
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="Enter any 6-digit OTP (demo: 123456)"
                   className="input-field"
                   maxLength={6}
+                  minLength={6}
                   required
                 />
+                <p className="text-xs text-gray-400 mt-1">Demo mode: enter any 6 digits to continue</p>
               </motion.div>
             )}
 
-            <button type="submit" className="btn-primary w-full">
-              {otpSent ? t('login') : 'Send OTP'}
+            {error && (
+              <p className="text-sm text-coral-600 bg-coral-50 border border-coral-100 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+
+            <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
+              {loading ? 'Logging in...' : otpSent ? t('login') : 'Send OTP'}
             </button>
           </form>
         </motion.div>

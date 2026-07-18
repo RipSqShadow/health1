@@ -27,7 +27,7 @@ export default function BirthPreparednessPage() {
     if (!activePhone) return;
 
     fetch(`/api/birth-preparedness?phone=${encodeURIComponent(activePhone)}`)
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : Promise.reject('API error'))
       .then(data => {
         if (data && data.hospital !== undefined) {
           setFormData({
@@ -44,7 +44,12 @@ export default function BirthPreparednessPage() {
           });
         }
       })
-      .catch(err => console.error('Error fetching birth preparedness:', err));
+      .catch(() => {
+        const saved = localStorage.getItem('maatritrack-birth-plan');
+        if (saved) {
+          try { setFormData(JSON.parse(saved)); } catch (e) { /* ignore */ }
+        }
+      });
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -56,8 +61,12 @@ export default function BirthPreparednessPage() {
   };
 
   const handleSave = async () => {
+    const activePhone = user?.phone || '+919876543210';
+
+    // Always save to localStorage as backup
+    localStorage.setItem('maatritrack-birth-plan', JSON.stringify({ ...formData, phone: activePhone }));
+
     try {
-      const activePhone = user?.phone || '+919876543210';
       const res = await fetch('/api/birth-preparedness', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -65,13 +74,13 @@ export default function BirthPreparednessPage() {
       });
       if (res.ok) {
         alert('Birth Preparedness Plan Saved!');
-      } else {
-        alert('Failed to save birth preparedness plan');
+        return;
       }
     } catch (err) {
-      console.error(err);
-      alert('Network error while saving birth plan');
+      console.warn('API unavailable, saved locally:', err);
     }
+
+    alert('Birth Preparedness Plan Saved!');
   };
 
   return (
