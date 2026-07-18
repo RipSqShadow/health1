@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { LanguageProvider } from '@/i18n/LanguageContext';
 import LandingPage from '@/pages/LandingPage';
 import StatsPage from '@/pages/StatsPage';
