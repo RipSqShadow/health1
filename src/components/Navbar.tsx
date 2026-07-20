@@ -40,7 +40,7 @@ export default function Navbar() {
 
     { to: '/', label: t('home') },
 
-    { to: '/stats', label: t('stats') },
+    { to: '/wellness', label: t('wellness') },
 
     { to: '/dashboard', label: t('dashboard') },
 
