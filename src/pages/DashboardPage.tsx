@@ -1,55 +1,24 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
-    AlertTriangle, Calendar, Users, CheckCircle2, Clock, ArrowRight,
-    Plus, FileText, Syringe, Phone, Activity, Bell, MapPin, Landmark, Droplet, ClipboardList, Baby
+    Plus, FileText, Syringe, Phone, Landmark, Droplet, ClipboardList, Baby, Calendar
 } from 'lucide-react';
 
-const actionsNeeded = [
-    { id: 1, type: 'critical', title: 'Sunita Devi - BP 150/95', village: 'Rampur', action: 'Immediate referral to CHC', time: '2h ago' },
-    { id: 2, type: 'high', title: 'Priya Sharma - Hb 8.2 g/dL', village: 'Sitapur', action: 'IFA supplementation + follow-up', time: '4h ago' },
-    { id: 3, type: 'medium', title: 'Kavita Singh - Missed ANC Visit 3', village: 'Deoria', action: 'ASHA home visit scheduled', time: '6h ago' },
-    { id: 4, type: 'high', title: 'Meena Patel - Age 17', village: 'Ballia', action: 'High-risk adolescent pregnancy protocol', time: '1d ago' },
-];
-
-const coverageGaps = [
-    { village: 'Azamgarh', ancCoverage: 62, target: 90, gap: 28 },
-    { village: 'Mau', ancCoverage: 71, target: 90, gap: 19 },
-    { village: 'Jaunpur', ancCoverage: 78, target: 90, gap: 12 },
-];
-
-const upcomingVisits = [
-    { name: 'Rekha Yadav', week: 28, date: 'Today', village: 'Rampur' },
-    { name: 'Anjali Verma', week: 14, date: 'Tomorrow', village: 'Sitapur' },
-    { name: 'Pooja Rai', week: 36, date: 'Mar 20', village: 'Gorakhpur' },
-];
-
-const resolvedToday = [
-    { title: 'TT2 vaccination completed - Geeta Kumari', time: '10:30 AM' },
-    { title: 'Referral accepted at CHC - Sunita Devi', time: '11:45 AM' },
-    { title: 'ANC Visit 2 recorded - Radha Devi', time: '2:15 PM' },
-];
+// Remove these unused arrays since they're not being used
+// const actionsNeeded = [...]
+// const coverageGaps = [...]
+// const upcomingVisits = [...]
+// const resolvedToday = [...]
 
 export default function DashboardPage() {
     const { t } = useLanguage();
 
-    const summaryCards = [
-        { icon: Users, label: t('totalPregnancies'), value: '47', sub: t('active'), color: 'bg-maatri-500' },
-        { icon: AlertTriangle, label: t('casesRequiringAttention'), value: '8', sub: t('highRisk'), color: 'bg-coral-500' },
-        { icon: Calendar, label: t('upcomingVisits'), value: '12', sub: t('weekly'), color: 'bg-gold-500' },
-        { icon: CheckCircle2, label: t('resolvedToday'), value: '6', sub: t('completed'), color: 'bg-sage-500' },
-    ];
+    // Remove summaryCards since it's not being used
+    // const summaryCards = [...]
 
-    const getTypeBadge = (type: string) => {
-        switch (type) {
-            case 'critical': return 'badge-red';
-            case 'high': return 'badge-red';
-            case 'medium': return 'badge-yellow';
-            default: return 'badge-green';
-        }
-    };
+    // Remove getTypeBadge since it's not being used
+    // const getTypeBadge = (type: string) => {...}
 
     return (
         <Layout show3D variant3D="minimal">
