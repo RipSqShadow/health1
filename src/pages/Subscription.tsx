@@ -46,7 +46,7 @@ const Subscription: React.FC = () => {
     };
 
     // ---- Payment handlers ----
-    const handlePayment = (method: 'qr' | 'card'): void => {
+    const handlePayment = (_method: 'qr' | 'card'): void => {
         setIsProcessing(true);
         setTimeout(() => {
             setIsProcessing(false);

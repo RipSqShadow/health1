@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
-    User, Baby, Stethoscope, Shield, Mail, MapPin, Lock, Eye, EyeOff,
+    User, Baby, Stethoscope, Shield, Eye, EyeOff,
     CheckCircle2, AlertCircle
 } from 'lucide-react';
 
@@ -39,7 +39,7 @@ export default function SignupPage() {
     // ---- UI state ----
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState(''); // Changed from boolean to string
 
     const DUMMY_OTP = '123456';
 
@@ -133,6 +133,7 @@ export default function SignupPage() {
                 localStorage.setItem('maatritrack-user', JSON.stringify(user));
                 setSuccess('Account created successfully!');
                 setTimeout(() => navigate('/dashboard'), 1500);
+                setLoading(false);
                 return;
             }
         } catch (err) {
@@ -187,8 +188,8 @@ export default function SignupPage() {
                                         type="button"
                                         onClick={() => setSelectedRole(role.id)}
                                         className={`p-2 rounded-xl border-2 text-xs font-medium transition-all flex flex-col items-center gap-0.5 ${selectedRole === role.id
-                                                ? 'border-maatri-500 bg-maatri-50 text-maatri-700'
-                                                : 'border-gray-200 hover:border-maatri-200'
+                                            ? 'border-maatri-500 bg-maatri-50 text-maatri-700'
+                                            : 'border-gray-200 hover:border-maatri-200'
                                             }`}
                                     >
                                         <role.icon className="w-5 h-5" />
