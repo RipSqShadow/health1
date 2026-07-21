@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 import { useLanguage } from '@/i18n/LanguageContext';
 
-import { Heart, Phone, MessageCircle } from 'lucide-react';
+import { Heart, Phone } from 'lucide-react';
 
 
 
