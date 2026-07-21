@@ -49,9 +49,9 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-b from-maatri-50/80 via-transparent to-maatri-50" />
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                     <motion.div {...fadeUp} className="text-center max-w-4xl mx-auto">
-                        <span className="inline-block px-4 py-1.5 rounded-full bg-maatri-100 text-maatri-700 text-sm font-semibold mb-6">
-                            {t('sdg')}
-                        </span>
+                        {/*<span className="inline-block px-4 py-1.5 rounded-full bg-maatri-100 text-maatri-700 text-sm font-semibold mb-6">*/}
+                        {/*    {t('sdg')}*/}
+                        {/*</span>*/}
                         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold text-maatri-900 leading-tight mb-6">
                             {t('heroTitle')}
                         </h1>
@@ -64,7 +64,7 @@ export default function LandingPage() {
                             <Link to="/dashboard" className="btn-primary text-lg inline-flex items-center justify-center gap-2">
                                 {t('getStarted')} <ArrowRight className="w-5 h-5" />
                             </Link>
-                            <a href="tel:108" className="btn-emergency text-lg inline-flex items-center justify-center gap-2">
+                            <a href="tel:6358810105" className="btn-emergency text-lg inline-flex items-center justify-center gap-2">
                                 <Phone className="w-5 h-5" /> {t('callNow')}
                             </a>
                         </div>

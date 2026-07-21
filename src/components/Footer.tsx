@@ -60,7 +60,6 @@ export default function Footer() {
 
               <p className="text-maatri-200 mb-4 max-w-md leading-relaxed">{t('footer')}</p>
 
-              <p className="text-maatri-300 text-sm">{t('sdg')}</p>
 
             </motion.div>
 
@@ -95,11 +94,6 @@ export default function Footer() {
             >
               <h4 className="font-semibold text-lg mb-4">Services</h4>
               <ul className="space-y-2 text-maatri-200">
-                <li>
-                  <a href="https://wa.me/916358810105" target="_blank" rel="noreferrer" className="flex items-center gap-2 group hover:text-white transition-colors">
-                    <MessageCircle className="w-4 h-4 text-sage-400 group-hover:animate-pulse" /> WhatsApp Chatbot
-                  </a>
-                </li>
                 <li><Link to="/schemes" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Govt Schemes</Link></li>
                 <li><Link to="/donors" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Blood Donors</Link></li>
                 <li><Link to="/appointments" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Appointments</Link></li>
